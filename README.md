@@ -2,6 +2,20 @@
 
 A Next.js-based skeleton system for managing digital content lending in a library system.
 
+## Installation
+
+```shell
+
+npm install
+
+# dev
+npm run dev
+
+# build
+npm run build
+npm start -- -p [port]
+```
+
 ## Overview
 
 This system provides comprehensive digital content management with the following features:
