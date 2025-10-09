@@ -17,16 +17,6 @@ export default function DashboardPage() {
         View your checked-out digital items with expiration countdown timers.
       </p>
 
-      <div style={{
-        padding: '1rem',
-        background: '#e3f2fd',
-        borderRadius: '4px',
-        marginBottom: '2rem'
-      }}>
-        <strong>Demo Mode:</strong> You currently have no active loans.
-        Checkout a book from the catalog to see it appear here with countdown timers.
-      </div>
-
       <UserDashboard userId={userId} />
     </div>
   );
