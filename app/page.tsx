@@ -48,6 +48,10 @@ export default function HomePage() {
         <strong>Note:</strong> This is a skeleton implementation. Components are functional but use in-memory storage.
         For production, connect to a database and implement authentication.
       </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <Link href="/login">🔐 Login</Link>
+      </div>
     </main>
   );
 }
