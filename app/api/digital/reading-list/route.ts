@@ -3,14 +3,20 @@
  * GET /api/digital/reading-list - Get user's reading list
  * POST /api/digital/reading-list - Add item to reading list
  * DELETE /api/digital/reading-list - Remove item from reading list
+ *
+ * Now uses Firebase Firestore for persistent storage
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { ReadingListManager } from '@/lib/reading-list';
 import { getCatalogManager } from '@/lib/catalog-singleton';
+import {
+  getUserWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  WishlistItem
+} from '@/lib/firebase-user-data';
 
 const catalogManager = getCatalogManager();
-const readingListManager = new ReadingListManager(catalogManager);
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,17 +30,51 @@ export async function GET(request: NextRequest) {
     }
 
     const withDetails = request.nextUrl.searchParams.get('withDetails') === 'true';
+    const wishlistItems = await getUserWishlist(userId);
 
     if (withDetails) {
-      const items = readingListManager.getReadingListWithDetails(userId);
+      const items = wishlistItems.map((item) => {
+        let contentDetails;
+        if (item.isDigital) {
+          const content = catalogManager.getContent(item.contentId);
+          contentDetails = content?.getMetadata();
+        }
+
+        return {
+          item: {
+            itemId: item.id,
+            userId,
+            contentId: item.contentId,
+            isDigital: item.isDigital,
+            addedDate: item.addedDate?.toDate() || new Date(),
+            notes: item.notes,
+          },
+          contentDetails: contentDetails || {
+            title: item.title,
+            author: item.author,
+            coverImageUrl: item.coverImageUrl,
+            formatType: item.formatType,
+            availableCopies: 0,
+            totalCopies: 0,
+          },
+        };
+      });
+
       return NextResponse.json({
         success: true,
         count: items.length,
         items,
       });
     } else {
-      const list = readingListManager.getUserReadingList(userId);
-      const items = list.getUserItems(userId);
+      const items = wishlistItems.map((item) => ({
+        itemId: item.id,
+        userId,
+        contentId: item.contentId,
+        isDigital: item.isDigital,
+        addedDate: item.addedDate?.toDate() || new Date(),
+        notes: item.notes,
+      }));
+
       return NextResponse.json({
         success: true,
         count: items.length,
@@ -42,6 +82,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
+    console.error('Failed to fetch reading list:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch reading list' },
       { status: 500 }
@@ -52,7 +93,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, contentId, isDigital, notes } = body;
+    const { userId, contentId, isDigital, notes, title, author, coverImageUrl, formatType } = body;
 
     if (!userId || !contentId || isDigital === undefined) {
       return NextResponse.json(
@@ -61,18 +102,46 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const item = readingListManager.addToReadingList(
-      userId,
+    // Get content details from catalog if not provided
+    let itemTitle = title;
+    let itemAuthor = author;
+    let itemCoverUrl = coverImageUrl;
+    let itemFormat = formatType;
+
+    if (isDigital && (!title || !author)) {
+      const content = catalogManager.getContent(contentId);
+      if (content) {
+        const metadata = content.getMetadata();
+        itemTitle = itemTitle || metadata.title;
+        itemAuthor = itemAuthor || metadata.author;
+        itemCoverUrl = itemCoverUrl || metadata.coverImageUrl;
+        itemFormat = itemFormat || metadata.formatType;
+      }
+    }
+
+    const itemId = await addToWishlist(userId, {
       contentId,
+      title: itemTitle || 'Unknown Title',
+      author: itemAuthor || 'Unknown Author',
+      coverImageUrl: itemCoverUrl,
+      formatType: itemFormat || 'UNKNOWN',
       isDigital,
-      notes
-    );
+      notes,
+    });
 
     return NextResponse.json({
       success: true,
-      item,
+      item: {
+        itemId,
+        userId,
+        contentId,
+        isDigital,
+        addedDate: new Date(),
+        notes,
+      },
     });
   } catch (error) {
+    console.error('Failed to add to reading list:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to add to reading list' },
       { status: 500 }
@@ -92,20 +161,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const success = readingListManager.removeFromReadingList(userId, itemId);
-
-    if (!success) {
-      return NextResponse.json(
-        { success: false, error: 'Item not found' },
-        { status: 404 }
-      );
-    }
+    await removeFromWishlist(userId, itemId);
 
     return NextResponse.json({
       success: true,
       message: 'Item removed from reading list',
     });
   } catch (error) {
+    console.error('Failed to remove from reading list:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to remove from reading list' },
       { status: 500 }
