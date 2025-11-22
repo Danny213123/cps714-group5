@@ -6,13 +6,16 @@
 'use client';
 
 import { CartProvider } from '@/contexts/CartContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Navigation from '@/components/Navigation';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
-    <CartProvider>
-      <Navigation />
-      {children}
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <Navigation />
+        {children}
+      </CartProvider>
+    </AuthProvider>
   );
 }

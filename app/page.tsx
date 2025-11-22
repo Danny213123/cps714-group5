@@ -1,68 +1,128 @@
-/**
- * Home Page - Digital Content & E-Book Lending Platform
- */
+'use client';
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { createUserProfile } from '@/lib/firebase-user-data';
 
-export default function HomePage() {
+export default function LoginPage() {
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [email, setEmail] = useState('');
+  const [pw, setPw] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { user, signIn, signUp, signOut, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push('/home');
+    }
+  }, [user, authLoading, router]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      if (mode === 'login') {
+        await signIn(email, pw);
+      } else {
+        await signUp(email, pw);
+        // Create user profile in Firestore after signup
+        const { auth } = await import('@/src/firebase');
+        if (auth.currentUser) {
+          await createUserProfile(auth.currentUser.uid, email);
+        }
+      }
+      router.push('/home');
+    } catch (err: any) {
+      setError(err.message || 'Auth error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Show loading while checking auth state
+  if (authLoading) {
+    return (
+      <main style={{ padding: '2rem', maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
+        <p>Loading...</p>
+      </main>
+    );
+  }
+
+  // If already logged in, show welcome and redirect option
+  if (user) {
+    return (
+      <main style={{ padding: '2rem', maxWidth: 480, margin: '0 auto' }}>
+        <h1>Welcome {user.email}</h1>
+        <button onClick={() => signOut()} style={btnStyle}>Logout</button>
+        <div style={{ marginTop: '1rem' }}>
+          <Link href="/home">Go to Home</Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>Digital Content & E-Book Lending Platform</h1>
-      <p>A comprehensive library management system for digital and physical content.</p>
-
-      <div style={{ marginTop: '2rem', display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-        <Link href="/catalog" style={cardStyle}>
-          <h2>📚 Browse Catalog</h2>
-          <p>Search and browse digital books, ePubs, PDFs, and audiobooks</p>
-        </Link>
-
-        <Link href="/dashboard" style={cardStyle}>
-          <h2>📊 My Dashboard</h2>
-          <p>View your checked-out items and expiration timers</p>
-        </Link>
-
-        <Link href="/reading-list" style={cardStyle}>
-          <h2>📖 Reading List</h2>
-          <p>Manage your saved books for later reading</p>
-        </Link>
-
-        <Link href="/api-demo" style={cardStyle}>
-          <h2>🔧 API Demo</h2>
-          <p>Test the API endpoints and see responses</p>
-        </Link>
-      </div>
-
-      <div style={{ marginTop: '3rem', padding: '1.5rem', background: '#f5f5f5', borderRadius: '8px' }}>
-        <h2>System Features</h2>
-        <ul>
-          <li>✓ Digital catalog with search and filters</li>
-          <li>✓ Checkout with automatic expiration (1-21 days)</li>
-          <li>✓ Reading list for digital and physical books</li>
-          <li>✓ DRM protection (Adobe, Overdrive, Custom)</li>
-          <li>✓ Real-time countdown timers</li>
-          <li>✓ Integration with core library systems</li>
-        </ul>
-      </div>
-
-      <div style={{ marginTop: '2rem', padding: '1rem', background: '#fff3cd', borderRadius: '8px' }}>
-        <strong>Note:</strong> This is a skeleton implementation. Components are functional but use in-memory storage.
-        For production, connect to a database and implement authentication.
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <Link href="/login">🔐 Login</Link>
-      </div>
+    <main style={{ padding: '2rem', maxWidth: 480, margin: '0 auto' }}>
+      <h1>{mode === 'login' ? 'Login' : 'Create Account'}</h1>
+      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={pw}
+          onChange={e => setPw(e.target.value)}
+          required
+          style={inputStyle}
+        />
+        {error && <div style={{ color: 'red', fontSize: '0.85rem' }}>{error}</div>}
+        <button type="submit" disabled={loading} style={btnStyle}>
+          {loading ? 'Please wait...' : mode === 'login' ? 'Login' : 'Sign Up'}
+        </button>
+      </form>
+      <button
+        onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }}
+        style={{ ...btnLinkStyle, marginTop: '0.75rem' }}
+        type="button"
+      >
+        {mode === 'login' ? 'Need an account? Sign up' : 'Have an account? Login'}
+      </button>
     </main>
   );
 }
 
-const cardStyle: React.CSSProperties = {
-  display: 'block',
-  padding: '1.5rem',
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  textDecoration: 'none',
-  color: 'inherit',
-  transition: 'all 0.2s',
-  background: 'white',
+const inputStyle: React.CSSProperties = {
+  padding: '0.6rem 0.8rem',
+  border: '1px solid #ccc',
+  borderRadius: 6
+};
+
+const btnStyle: React.CSSProperties = {
+  padding: '0.7rem 1rem',
+  background: '#2563eb',
+  color: 'white',
+  border: 'none',
+  borderRadius: 6,
+  cursor: 'pointer'
+};
+
+const btnLinkStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  color: '#2563eb',
+  cursor: 'pointer',
+  textDecoration: 'underline',
+  padding: 0
 };

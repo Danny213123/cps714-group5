@@ -4,19 +4,30 @@
 
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { DigitalCatalog } from '@/components/DigitalCatalog';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CatalogPage() {
-  // Mock user ID - in real app, would come from authentication
-  const userId = 'user-demo-123';
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
 
   const handleAddToReadingList = async (contentId: string) => {
+    if (!user) return;
+
     try {
       const response = await fetch('/api/digital/reading-list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId,
+          userId: user.uid,
           contentId,
           isDigital: true,
         }),
@@ -31,6 +42,18 @@ export default function CatalogPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       <h1>Digital Catalog</h1>
@@ -39,7 +62,7 @@ export default function CatalogPage() {
       </p>
 
       <DigitalCatalog
-        userId={userId}
+        userId={user.uid}
         onAddToReadingList={handleAddToReadingList}
       />
     </div>

@@ -5,16 +5,35 @@
 'use client';
 
 import { useCart } from '@/contexts/CartContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CartPage() {
   const { items, removeFromCart, updateLoanPeriod, clearCart, cartCount } = useCart();
   const [checkingOut, setCheckingOut] = useState(false);
   const router = useRouter();
+  const { user, loading } = useAuth();
 
-  // Mock user ID - in real app, would come from authentication
-  const userId = 'user-demo-123';
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  const userId = user.uid;
 
   const handleCheckoutAll = async () => {
     if (items.length === 0) return;
