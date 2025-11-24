@@ -1,7 +1,5 @@
 # Digital Content & E-Book Lending Platform
 
-A Next.js-based skeleton system for managing digital content lending in a library system.
-
 ## Installation
 
 ```shell
@@ -13,19 +11,19 @@ npm run dev
 
 # build
 npm run build
-npm start -- -p [port]
+npm start
 ```
 
 ## Overview
 
 This system provides comprehensive digital content management with the following features:
 
-- **E-Book Catalog**: Browse and search digital content (PDFs, ePubs, Audiobooks)
-- **Borrow & Download**: Check out digital items with automatic expiration
-- **Reading List**: Save digital and physical books for later
+- **E-Book Catalog**: Digital catalog with search and filters
+- **Borrow & Download**: Checkout with automatic expiration (1-21 days)
+- **Reading List**: Reading list for digital and physical books
 - **DRM Protection**: Support for Adobe DRM, Overdrive, and custom DRM
-- **User Dashboard**: Track checked-out items with countdown timers
-- **Provider Integration**: Connect to external providers like Overdrive
+- **User Dashboard**: Real-time countdown timers
+- **Provider Integration**: Integration with core library systems
 
 ## Project Structure
 
@@ -109,10 +107,6 @@ Get user's active loans
 ### GET/POST/DELETE `/api/digital/reading-list`
 Manage reading list items
 
-### GET `/api/digital/download/[loanId]`
-Download authorized content
-- Query params: `token`
-
 ## Key Features
 
 ### Automatic Returns
@@ -180,10 +174,7 @@ readingListManager.addToReadingList(
 
 ## Next Steps
 
-1. Implement database persistence (currently in-memory)
-2. Add authentication/authorization
-3. Complete provider integrations (Overdrive, etc.)
-4. Implement actual file storage and streaming
-5. Add full DRM encryption/decryption
-6. Create admin interface for catalog management
-7. Add analytics and usage tracking
+1. Complete provider integrations (Overdrive, etc.)
+2. Implement actual file storage and streaming (download functionality)
+3. Add full DRM encryption/decryption
+4. Create admin interface for catalog management (for future integration)
