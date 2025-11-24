@@ -39,7 +39,9 @@ export default function APIDemoPage() {
         Test the API endpoints to see how the system works.
       </p>
 
+      {/* API Test Buttons */}
       <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+        {/* test get catalog */}
         <button
           onClick={() => testAPI('/api/digital/catalog')}
           style={buttonStyle}
@@ -48,6 +50,7 @@ export default function APIDemoPage() {
           GET /api/digital/catalog
         </button>
 
+        {/* test getting only available items */}
         <button
           onClick={() => testAPI('/api/digital/catalog?availableOnly=true')}
           style={buttonStyle}
@@ -56,6 +59,7 @@ export default function APIDemoPage() {
           GET /api/digital/catalog (available only)
         </button>
 
+        {/* test getting user loans */}
         <button
           onClick={() =>
             testAPI('/api/digital/loans/user-demo-123?activeOnly=true')
@@ -66,6 +70,7 @@ export default function APIDemoPage() {
           GET /api/digital/loans/[userId]
         </button>
 
+        {/* test getting reading list */}
         <button
           onClick={() =>
             testAPI('/api/digital/reading-list?userId=user-demo-123&withDetails=true')
@@ -76,6 +81,7 @@ export default function APIDemoPage() {
           GET /api/digital/reading-list
         </button>
 
+        {/* test checkout */}
         <button
           onClick={() =>
             testAPI('/api/digital/checkout', 'POST', {
@@ -89,7 +95,7 @@ export default function APIDemoPage() {
         >
           POST /api/digital/checkout
         </button>
-
+        {/* test adding to reading list */}
         <button
           onClick={() =>
             testAPI('/api/digital/reading-list', 'POST', {
@@ -147,7 +153,6 @@ export default function APIDemoPage() {
           <li><code>POST /api/digital/return</code> - Return digital content</li>
           <li><code>GET /api/digital/loans/[userId]</code> - Get user loans</li>
           <li><code>GET/POST/DELETE /api/digital/reading-list</code> - Manage reading list</li>
-          <li><code>GET /api/digital/download/[loanId]</code> - Download content</li>
         </ul>
       </div>
     </div>

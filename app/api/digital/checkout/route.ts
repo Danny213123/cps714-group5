@@ -2,7 +2,7 @@
  * API Route: Digital Checkout
  * POST /api/digital/checkout - Checkout digital content
  *
- * Now uses Firebase Firestore for persistent storage
+ * Uses Firebase Firestore for persistent storage
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -68,7 +68,6 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       );
     }
-
     if (!content.isAvailable()) {
       return NextResponse.json(
         { success: false, error: 'Content not available' },

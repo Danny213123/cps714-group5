@@ -37,8 +37,9 @@ export default function HomePage() {
   return (
     <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
       <h1>Digital Content & E-Book Lending Platform</h1>
-      <p>Welcome, {user.email}! A comprehensive library management system for digital and physical content.</p>
+      <p>Welcome, {user.email}! This is a comprehensive library management system for digital and physical content.</p>
 
+      {/* Navigation Buttons */ }
       <div style={{ marginTop: '2rem', display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
         <Link href="/catalog" style={cardStyle}>
           <h2>Browse Catalog</h2>

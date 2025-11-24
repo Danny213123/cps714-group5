@@ -35,6 +35,7 @@ export default function CartPage() {
 
   const userId = user.uid;
 
+  // API call to checkout all items in cart
   const handleCheckoutAll = async () => {
     if (items.length === 0) return;
 
@@ -49,11 +50,12 @@ export default function CartPage() {
       }
     }
 
+    // Checkout disabled if no available items
     if (availableItems.length === 0) {
       alert('No available books to checkout.');
       return;
     }
-
+    // Checkout 
     setCheckingOut(true);
     try {
       // Checkout each available item

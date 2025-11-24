@@ -357,7 +357,7 @@ function LoanCard({ loan, onReturn }: LoanCardProps) {
               onMouseEnter={(e) => timeRemaining > 0 && (e.currentTarget.style.background = '#f8f8f8')}
               onMouseLeave={(e) => timeRemaining > 0 && (e.currentTarget.style.background = 'none')}
             >
-              📥 Download
+              Download
             </button>
 
             <button
@@ -378,7 +378,7 @@ function LoanCard({ loan, onReturn }: LoanCardProps) {
               onMouseEnter={(e) => e.currentTarget.style.background = '#fff5f5'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
             >
-              ↩️ Return Early
+              Return Early
             </button>
           </div>
         </>

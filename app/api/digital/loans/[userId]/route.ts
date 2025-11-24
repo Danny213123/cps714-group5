@@ -2,7 +2,7 @@
  * API Route: User Loans
  * GET /api/digital/loans/[userId] - Get user's digital loans
  *
- * Now uses Firebase Firestore for persistent storage
+ * Uses Firebase Firestore for persistent storage
  */
 
 import { NextRequest, NextResponse } from 'next/server';

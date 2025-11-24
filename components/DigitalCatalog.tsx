@@ -28,6 +28,7 @@ export function DigitalCatalog({
     fetchCatalog();
   }, [searchQuery, formatFilter, availableOnly]);
 
+  // Fetch catalog with API with filters
   const fetchCatalog = async () => {
     setLoading(true);
     try {
@@ -91,7 +92,6 @@ export function DigitalCatalog({
           <option value="">All Formats</option>
           <option value={DigitalFormat.PDF}>PDF</option>
           <option value={DigitalFormat.EPUB}>EPUB</option>
-          <option value={DigitalFormat.MOBI}>MOBI</option>
           <option value={DigitalFormat.AUDIOBOOK}>Audiobook</option>
         </select>
 
@@ -329,7 +329,7 @@ function CatalogItem({ content, onAddToReadingList }: CatalogItemProps) {
                 onMouseEnter={(e) => !inCart && (e.currentTarget.style.background = '#f8f8f8')}
                 onMouseLeave={(e) => !inCart && (e.currentTarget.style.background = 'none')}
               >
-                {inCart ? '✓ In Cart' : '🛒 Add to Cart'}
+                {inCart ? 'In Cart' : 'Add to Cart'}
               </button>
             )}
 
@@ -351,11 +351,12 @@ function CatalogItem({ content, onAddToReadingList }: CatalogItemProps) {
                 onMouseEnter={(e) => e.currentTarget.style.background = '#f8f8f8'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
               >
-                ⭐ Save for Later
+                Save for Later
               </button>
             )}
 
-            <button
+            {/* Details functionality not yet implemented */}
+            {/* <button
               onClick={() => setShowMenu(false)}
               style={{
                 width: '100%',
@@ -370,8 +371,8 @@ function CatalogItem({ content, onAddToReadingList }: CatalogItemProps) {
               onMouseEnter={(e) => e.currentTarget.style.background = '#f8f8f8'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
             >
-              ℹ️ Details
-            </button>
+              Details
+            </button> */}
           </div>
         </>
       )}

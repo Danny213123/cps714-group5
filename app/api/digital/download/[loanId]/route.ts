@@ -58,10 +58,7 @@ export async function GET(
       );
     }
 
-    // In a real implementation, this would:
-    // 1. Fetch the actual file from storage
-    // 2. Apply DRM protection if needed
-    // 3. Stream the file to the client
+    // may not be in use because of integration
 
     const metadata = content.getMetadata();
 
@@ -72,7 +69,7 @@ export async function GET(
       title: metadata.title,
       format: metadata.formatType,
       drmType: metadata.drmType,
-      // In real implementation, return download URL or stream
+      // In working implementation, return download URL or stream
     });
   } catch (error) {
     return NextResponse.json(

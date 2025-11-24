@@ -2,7 +2,7 @@
  * API Route: Digital Return
  * POST /api/digital/return - Return digital content
  *
- * Now uses Firebase Firestore for persistent storage
+ * Uses Firebase Firestore for persistent storage
  */
 
 import { NextRequest, NextResponse } from 'next/server';

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate and add content to catalog
-    // Implementation would go here
+    // Implementation/Integration would go here
 
     return NextResponse.json({
       success: true,

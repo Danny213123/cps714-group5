@@ -22,6 +22,7 @@ export default function LoginPage() {
     }
   }, [user, authLoading, router]);
 
+  // Login form submission
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -37,9 +38,10 @@ export default function LoginPage() {
           await createUserProfile(auth.currentUser.uid, email);
         }
       }
+      // Redirect to home after successful login
       router.push('/home');
     } catch (err: any) {
-      setError(err.message || 'Auth error');
+      setError(err.message || 'Authentication error, please try again.');
     } finally {
       setLoading(false);
     }
@@ -67,6 +69,7 @@ export default function LoginPage() {
     );
   }
 
+  // HTML
   return (
     <main style={{ padding: '2rem', maxWidth: 480, margin: '0 auto' }}>
       <h1>{mode === 'login' ? 'Login' : 'Create Account'}</h1>
@@ -103,6 +106,7 @@ export default function LoginPage() {
   );
 }
 
+// CSS
 const inputStyle: React.CSSProperties = {
   padding: '0.6rem 0.8rem',
   border: '1px solid #ccc',

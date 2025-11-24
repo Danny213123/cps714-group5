@@ -121,10 +121,20 @@ export async function returnLoan(userId: string, loanId: string): Promise<void> 
 // Wishlist / Reading List
 export async function addToWishlist(userId: string, item: Omit<WishlistItem, 'id' | 'addedDate'>): Promise<string> {
   const wishlistRef = collection(db, 'users', userId, 'wishlist');
-  const docRef = await addDoc(wishlistRef, {
-    ...item,
+  
+  // Sanitize data
+  const sanitizedItem = {
+    contentId: item.contentId,
+    title: item.title || 'Unknown Title',
+    author: item.author || 'Unknown Author',
+    coverImageUrl: item.coverImageUrl || null, // Use null instead of undefined
+    formatType: item.formatType || 'UNKNOWN',
+    isDigital: item.isDigital,
+    notes: item.notes || '', // Use empty string instead of undefined
     addedDate: serverTimestamp()
-  });
+  };
+  
+  const docRef = await addDoc(wishlistRef, sanitizedItem);
   return docRef.id;
 }
 

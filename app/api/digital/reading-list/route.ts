@@ -4,7 +4,7 @@
  * POST /api/digital/reading-list - Add item to reading list
  * DELETE /api/digital/reading-list - Remove item from reading list
  *
- * Now uses Firebase Firestore for persistent storage
+ * Uses Firebase Firestore for persistent storage
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
     const withDetails = request.nextUrl.searchParams.get('withDetails') === 'true';
     const wishlistItems = await getUserWishlist(userId);
 
+    // for content details implementation
     if (withDetails) {
       const items = wishlistItems.map((item) => {
         let contentDetails;
@@ -119,15 +120,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const itemId = await addToWishlist(userId, {
+    // Ensure all fields have no undefined values
+    const sanitizedItem = {
       contentId,
       title: itemTitle || 'Unknown Title',
       author: itemAuthor || 'Unknown Author',
-      coverImageUrl: itemCoverUrl,
+      coverImageUrl: itemCoverUrl || null, 
       formatType: itemFormat || 'UNKNOWN',
       isDigital,
-      notes,
-    });
+      notes: notes || '',
+    };
+
+    const itemId = await addToWishlist(userId, sanitizedItem);
 
     return NextResponse.json({
       success: true,
@@ -137,13 +141,13 @@ export async function POST(request: NextRequest) {
         contentId,
         isDigital,
         addedDate: new Date(),
-        notes,
+        notes: sanitizedItem.notes,
       },
     });
   } catch (error) {
     console.error('Failed to add to reading list:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to add to reading list' },
+      { success: false, error: 'Failed to add to reading list: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     );
   }
