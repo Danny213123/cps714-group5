@@ -36,7 +36,7 @@ export default function HomePage() {
 
   return (
     <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>Digital Content & E-Book Lending Platform</h1>
+      <h1>LibraLite Digital Content & E-Book Lending Platform</h1>
       <p>Welcome, {user.email}! This is a comprehensive library management system for digital and physical content.</p>
 
       {/* Navigation Buttons */ }

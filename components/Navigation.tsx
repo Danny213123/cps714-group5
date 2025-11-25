@@ -23,7 +23,7 @@ export default function Navigation() {
       alignItems: 'center',
     }}>
       <Link href="/home" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.2rem' }}>
-        Digital Library System
+        LibraLite
       </Link>
 
       <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
