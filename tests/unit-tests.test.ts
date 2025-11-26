@@ -26,7 +26,7 @@ import { DRMController, AccessControlManager } from '../lib/drm-access-control';
 
 import { ReadingList, ReadingListManager } from '../lib/reading-list';
 
-// ============ Test Fixtures ============
+//  Test Fixtures 
 
 const createMockEBookMetadata = (overrides?: Partial<DigitalContentMetadata>): DigitalContentMetadata => ({
   contentId: 'ebook-001',
@@ -62,7 +62,7 @@ const createMockAudioBookMetadata = (overrides?: Partial<DigitalContentMetadata>
   ...overrides,
 });
 
-// ============ DigitalContent Tests ============
+//  DigitalContent Tests 
 
 describe('DigitalContent', () => {
   let content: DigitalContent;
@@ -126,7 +126,7 @@ describe('DigitalContent', () => {
   });
 });
 
-// ============ EBook Tests ============
+//  EBook Tests 
 
 describe('EBook', () => {
   let ebook: EBook;
@@ -149,7 +149,7 @@ describe('EBook', () => {
   });
 });
 
-// ============ AudioBook Tests ============
+//  AudioBook Tests 
 
 describe('AudioBook', () => {
   let audiobook: AudioBook;
@@ -171,7 +171,7 @@ describe('AudioBook', () => {
   });
 });
 
-// ============ DigitalCatalogManager Tests ============
+//  DigitalCatalogManager Tests 
 
 describe('DigitalCatalogManager', () => {
   let catalogManager: DigitalCatalogManager;
@@ -245,7 +245,7 @@ describe('DigitalCatalogManager', () => {
   });
 });
 
-// ============ DigitalLoanManager Tests ============
+//  DigitalLoanManager Tests 
 
 describe('DigitalLoanManager', () => {
   let catalogManager: DigitalCatalogManager;
@@ -433,7 +433,7 @@ describe('DigitalLoanManager', () => {
   });
 });
 
-// ============ LoanRules Tests ============
+//  LoanRules Tests 
 
 describe('LoanRules', () => {
   let catalogManager: DigitalCatalogManager;
@@ -473,7 +473,7 @@ describe('LoanRules', () => {
   });
 });
 
-// ============ DRMController Tests ============
+// DRMController Tests 
 
 describe('DRMController', () => {
   let drmController: DRMController;
@@ -566,7 +566,7 @@ describe('DRMController', () => {
   });
 });
 
-// ============ AccessControlManager Tests ============
+//  AccessControlManager Tests 
 
 describe('AccessControlManager', () => {
   let catalogManager: DigitalCatalogManager;
@@ -689,7 +689,7 @@ describe('AccessControlManager', () => {
   });
 });
 
-// ============ ReadingList Tests ============
+//  ReadingList Tests 
 
 describe('ReadingList', () => {
   let readingList: ReadingList;
@@ -792,7 +792,7 @@ describe('ReadingList', () => {
   });
 });
 
-// ============ ReadingListManager Tests ============
+//  ReadingListManager Tests 
 
 describe('ReadingListManager', () => {
   let catalogManager: DigitalCatalogManager;
@@ -855,7 +855,7 @@ describe('ReadingListManager', () => {
   });
 });
 
-// ============ Integration Tests ============
+//  Integration Tests 
 
 describe('Integration: Full Checkout Flow', () => {
   let catalogManager: DigitalCatalogManager;
