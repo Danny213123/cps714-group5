@@ -13,6 +13,14 @@ npm run dev
 npm run build
 npm start
 ```
+## Testing
+
+```shell
+
+npm install jest
+
+npx jest tests/unit-tests.test.ts
+```
 
 ## Overview
 
